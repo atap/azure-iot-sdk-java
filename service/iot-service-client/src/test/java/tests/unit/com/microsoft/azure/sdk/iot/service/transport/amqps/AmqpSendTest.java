@@ -12,6 +12,7 @@ import com.microsoft.azure.sdk.iot.service.transport.amqps.AmqpSendHandler;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
 import org.apache.qpid.proton.Proton;
 import org.apache.qpid.proton.engine.Connection;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -324,5 +326,30 @@ public class AmqpSendTest
         AmqpSend amqpSend = new AmqpSend(hostName, userName, sasToken, iotHubServiceClientProtocol);
         // Act
         amqpSend.send(deviceId, moduleId, message);
+    }
+
+    // Tests_SRS_SERVICE_SDK_JAVA_AMQPSEND_34_007 : [This function shall stop the saved reactor.]
+    @Test
+    public void sendNotificationCallbackStopsReactor() throws UnsupportedEncodingException
+    {
+        // Arrange
+        String hostName = "aaa";
+        String userName = "bbb";
+        String sasToken = "ccc";
+        IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
+        AmqpSend amqpSend = new AmqpSend(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        Deencapsulation.setField(amqpSend, "reactor", reactor);
+
+        //act
+        amqpSend.onSendFinished();
+
+        //assert
+        new Verifications()
+        {
+            {
+                reactor.stop();
+                times = 1;
+            }
+        };
     }
 }

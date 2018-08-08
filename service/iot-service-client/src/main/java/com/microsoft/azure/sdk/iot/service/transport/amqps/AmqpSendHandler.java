@@ -56,7 +56,7 @@ public class AmqpSendHandler extends BaseHandler
     protected final IotHubServiceClientProtocol iotHubServiceClientProtocol;
     protected final String webSocketHostName;
 
-    private SendNotificationCallback SendNotificationCallback;
+    private SendNotificationCallback sendNotificationCallback;
 
     private boolean isConnected = false;
     private boolean isConnectionError = false;
@@ -68,11 +68,13 @@ public class AmqpSendHandler extends BaseHandler
      * @param sasToken The SAS token string
      * @param iotHubServiceClientProtocol protocol to use
      */
-    public AmqpSendHandler(String hostName, String userName, String sasToken, IotHubServiceClientProtocol iotHubServiceClientProtocol, SendNotificationCallback SendNotificationCallback)
+    public AmqpSendHandler(String hostName, String userName, String sasToken, IotHubServiceClientProtocol iotHubServiceClientProtocol, SendNotificationCallback sendNotificationCallback)
     {
-        this.SendNotificationCallback = SendNotificationCallback;
-
         // Codes_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
+        if (sendNotificationCallback == null)
+        {
+            throw new IllegalArgumentException("sendNotificationCallback cannot be null");
+        }
         if (Tools.isNullOrEmpty(hostName))
         {
             throw new IllegalArgumentException("hostName can not be null or empty");
@@ -90,7 +92,10 @@ public class AmqpSendHandler extends BaseHandler
         {
             throw new IllegalArgumentException("iotHubServiceClientProtocol cannot be null");
         }
-     
+
+        // Codes_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_34_032: [This function shall save the provided sendNotificationCallback.]
+        this.sendNotificationCallback = sendNotificationCallback;
+
         this.iotHubServiceClientProtocol = iotHubServiceClientProtocol;
         this.webSocketHostName = hostName;
         if (this.iotHubServiceClientProtocol == IotHubServiceClientProtocol.AMQPS_WS)
@@ -353,9 +358,10 @@ public class AmqpSendHandler extends BaseHandler
             snd.getSession().close();
             snd.getSession().getConnection().close();
             isConnected = false;
-        }
 
-        this.SendNotificationCallback.onSendFinished();
+            // Codes_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_34_033: [After closing the sender, session and connection, this function shall invoke the saved sendNotificationCallback.]
+            this.sendNotificationCallback.onSendFinished();
+        }
     }
 
     public void sendComplete() throws IotHubException, IOException

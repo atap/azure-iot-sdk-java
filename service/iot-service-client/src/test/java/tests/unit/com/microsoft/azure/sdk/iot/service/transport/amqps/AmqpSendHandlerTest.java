@@ -529,6 +529,8 @@ public class AmqpSendHandlerTest
     Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_25_027: [** The event handler shall get the Sender (Proton) object from the event **]**
 
     Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_25_028: [** The event handler shall close the Sender, Session and Connection **]**
+
+    Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_34_033: [After closing the sender, session and connection, this function shall invoke the saved sendNotificationCallback.]
      */
     @Test
     public void onDelivery_flow_ok(final @Mocked Event mockedEvent,
@@ -556,6 +558,7 @@ public class AmqpSendHandlerTest
                 session = sender.getSession();
                 connection = session.getConnection();
                 connection.close();
+                mockedSendNotificationCallback.onSendFinished();
             }
         };
         // Act
@@ -640,6 +643,37 @@ public class AmqpSendHandlerTest
         // Act
         amqpSendHandler.sendComplete();
 
+    }
+
+    // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_34_032: [This function shall save the provided sendNotificationCallback.]
+    @Test
+    public void constructorSavesSendNotificationCallback()
+    {
+        // Arrange
+        String hostName = "aaa";
+        String userName = "bbb";
+        String sasToken = "ccc";
+        IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
+
+        //act
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
+
+        //assert
+        assertEquals(mockedSendNotificationCallback, Deencapsulation.getField(amqpSendHandler, "sendNotificationCallback"));
+    }
+
+    // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
+    @Test (expected = IllegalArgumentException.class)
+    public void constructorThrowsForNullSendNotificationCallback()
+    {
+        // Arrange
+        String hostName = "aaa";
+        String userName = "bbb";
+        String sasToken = "ccc";
+        IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
+
+        //act
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, null);
     }
 
     private void createProtonObjects()

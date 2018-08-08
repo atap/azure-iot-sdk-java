@@ -147,6 +147,7 @@ public class AmqpSend extends BaseHandler implements SendNotificationCallback
     @Override
     public void onSendFinished()
     {
+        // Codes_SRS_SERVICE_SDK_JAVA_AMQPSEND_34_007 : [This function shall stop the saved reactor.]
         this.reactor.stop();
     }
 }
