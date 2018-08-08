@@ -9,6 +9,7 @@ import com.microsoft.azure.sdk.iot.deps.auth.IotHubSSLContext;
 import com.microsoft.azure.sdk.iot.deps.ws.impl.WebSocketImpl;
 import com.microsoft.azure.sdk.iot.service.IotHubServiceClientProtocol;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
+import com.microsoft.azure.sdk.iot.service.transport.SendNotificationCallback;
 import com.microsoft.azure.sdk.iot.service.transport.amqps.AmqpResponseVerification;
 import com.microsoft.azure.sdk.iot.service.transport.amqps.AmqpSendHandler;
 import mockit.Deencapsulation;
@@ -78,7 +79,8 @@ public class AmqpSendHandlerTest
     @Mocked Disposition disposition;
     @Mocked AmqpResponseVerification responseVerification;
     @Mocked IotHubSSLContext mockedIotHubSSLContext;
-
+    @Mocked SendNotificationCallback mockedSendNotificationCallback;
+    
     // Test_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall copy all input parameters to private member variables for event processing]
     // Test_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_002: [The constructor shall concatenate the host name with the port]
     // Test_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_003: [The constructor shall initialize a new Handshaker (Proton) object to handle communication handshake]
@@ -97,7 +99,7 @@ public class AmqpSendHandlerTest
             }
         };
         // Act
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, null);
         String _hostName = Deencapsulation.getField(amqpSendHandler, "hostName");
         String _userName = Deencapsulation.getField(amqpSendHandler, "userName");
         String _sasToken = Deencapsulation.getField(amqpSendHandler, "sasToken");
@@ -120,7 +122,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
@@ -134,7 +136,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
@@ -148,7 +150,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
@@ -162,7 +164,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
@@ -176,7 +178,7 @@ public class AmqpSendHandlerTest
         String sasToken = null;
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
@@ -190,7 +192,7 @@ public class AmqpSendHandlerTest
         String sasToken = "";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
     
      // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
@@ -204,7 +206,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = null;
         // Act
-        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSend = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
     }
 
     // Tests_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_004: [The function shall create a new Message (Proton) object]
@@ -223,7 +225,7 @@ public class AmqpSendHandlerTest
         String content = "abcdefghijklmnopqrst";
         String toProperty = "/devices/deviceId/messages/devicebound";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         com.microsoft.azure.sdk.iot.service.Message iotMessage = new com.microsoft.azure.sdk.iot.service.Message(content);
         Map<String, String> userDefinedProperties = new HashMap<>(5);
         userDefinedProperties.put("key1", "value1");
@@ -278,7 +280,7 @@ public class AmqpSendHandlerTest
         String content = "abcdefghijklmnopqrst";
         String toProperty = "/devices/deviceId/modules/moduleId/messages/devicebound";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         com.microsoft.azure.sdk.iot.service.Message iotMessage = new com.microsoft.azure.sdk.iot.service.Message(content);
         Map<String, String> userDefinedProperties = new HashMap<>(5);
         userDefinedProperties.put("key1", "value1");
@@ -328,7 +330,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         String hostAddr = hostName + ":5671";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         // Assert
         new Expectations()
         {
@@ -358,7 +360,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         String hostAddr = hostName + ":443";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS_WS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         // Assert
         new Expectations()
         {
@@ -399,7 +401,7 @@ public class AmqpSendHandlerTest
         String sasToken = "ccc";
         String hostAddr = hostName + ":5671";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         // Assert
         new Expectations()
         {
@@ -430,7 +432,7 @@ public class AmqpSendHandlerTest
         String hostAddr = hostName + ":5671";
         String endpoint = "/messages/devicebound";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         // Assert
         new Expectations()
         {
@@ -463,7 +465,7 @@ public class AmqpSendHandlerTest
         String endpoint = "/messages/devicebound";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         createProtonObjects();
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         amqpSendHandler.createProtonMessage(deviceId, iotMessage);
         // Assert
         new Expectations()
@@ -499,7 +501,7 @@ public class AmqpSendHandlerTest
         exceptionCount = 0;
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
         createProtonObjects();
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         Queue<Message> testMessagesToBeSent = new LinkedBlockingQueue<>();
         testMessagesToBeSent.add(messageWithException);
         Deencapsulation.setField(amqpSendHandler,"messagesToBeSent", testMessagesToBeSent );
@@ -538,7 +540,7 @@ public class AmqpSendHandlerTest
         String userName = "bbb";
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
 
         // Assert
         new Expectations()
@@ -575,7 +577,7 @@ public class AmqpSendHandlerTest
         String userName = "bbb";
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         Queue<AmqpResponseVerification> testsendStatusQueue = new LinkedBlockingQueue<>();
         testsendStatusQueue.add(mockedVerification);
         Deencapsulation.setField(amqpSendHandler,"sendStatusQueue", testsendStatusQueue );
@@ -602,7 +604,7 @@ public class AmqpSendHandlerTest
         String userName = "bbb";
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         Queue<AmqpResponseVerification> testsendStatusQueue = new LinkedBlockingQueue<>();
         testsendStatusQueue.add(mockedVerification);
         Deencapsulation.setField(amqpSendHandler,"sendStatusQueue", testsendStatusQueue );
@@ -632,7 +634,7 @@ public class AmqpSendHandlerTest
         String userName = "bbb";
         String sasToken = "ccc";
         IotHubServiceClientProtocol iotHubServiceClientProtocol = IotHubServiceClientProtocol.AMQPS;
-        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol);
+        AmqpSendHandler amqpSendHandler = new AmqpSendHandler(hostName, userName, sasToken, iotHubServiceClientProtocol, mockedSendNotificationCallback);
         amqpSendHandler.onTransportError(mockedEvent);
 
         // Act

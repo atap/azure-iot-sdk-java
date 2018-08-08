@@ -9,6 +9,7 @@ import com.microsoft.azure.sdk.iot.service.IotHubServiceClientProtocol;
 import com.microsoft.azure.sdk.iot.service.Message;
 import com.microsoft.azure.sdk.iot.service.Tools;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
+import com.microsoft.azure.sdk.iot.service.transport.SendNotificationCallback;
 import org.apache.qpid.proton.Proton;
 import org.apache.qpid.proton.engine.BaseHandler;
 import org.apache.qpid.proton.engine.Event;
@@ -22,7 +23,7 @@ import java.io.IOException;
  * high level open, close and send methods.
  * Initialize and use AmqpsSendHandler class for low level ampqs operations.
  */
-public class AmqpSend extends BaseHandler
+public class AmqpSend extends BaseHandler implements SendNotificationCallback
 {
     protected final String hostName;
     protected final String userName;
@@ -89,7 +90,7 @@ public class AmqpSend extends BaseHandler
     public void open()
     {
         // Codes_SRS_SERVICE_SDK_JAVA_AMQPSEND_12_004: [The function shall create an AmqpsSendHandler object to handle reactor events]
-        amqpSendHandler = new AmqpSendHandler(this.hostName, this.userName, this.sasToken, this.iotHubServiceClientProtocol);
+        amqpSendHandler = new AmqpSendHandler(this.hostName, this.userName, this.sasToken, this.iotHubServiceClientProtocol, this);
     }
 
     /**
@@ -141,5 +142,11 @@ public class AmqpSend extends BaseHandler
                 throw new IOException("send handler is not initialized. call open before send");
             }
         }
+    }
+
+    @Override
+    public void onSendFinished()
+    {
+        this.reactor.stop();
     }
 }

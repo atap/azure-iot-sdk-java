@@ -11,6 +11,7 @@ import com.microsoft.azure.sdk.iot.service.IotHubServiceClientProtocol;
 import com.microsoft.azure.sdk.iot.service.Tools;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import com.microsoft.azure.sdk.iot.service.transport.TransportUtils;
+import com.microsoft.azure.sdk.iot.service.transport.SendNotificationCallback;
 import org.apache.qpid.proton.Proton;
 import org.apache.qpid.proton.amqp.Binary;
 import org.apache.qpid.proton.amqp.Symbol;
@@ -55,6 +56,8 @@ public class AmqpSendHandler extends BaseHandler
     protected final IotHubServiceClientProtocol iotHubServiceClientProtocol;
     protected final String webSocketHostName;
 
+    private SendNotificationCallback SendNotificationCallback;
+
     private boolean isConnected = false;
     private boolean isConnectionError = false;
     /**
@@ -65,8 +68,10 @@ public class AmqpSendHandler extends BaseHandler
      * @param sasToken The SAS token string
      * @param iotHubServiceClientProtocol protocol to use
      */
-    public AmqpSendHandler(String hostName, String userName, String sasToken, IotHubServiceClientProtocol iotHubServiceClientProtocol)
+    public AmqpSendHandler(String hostName, String userName, String sasToken, IotHubServiceClientProtocol iotHubServiceClientProtocol, SendNotificationCallback SendNotificationCallback)
     {
+        this.SendNotificationCallback = SendNotificationCallback;
+
         // Codes_SRS_SERVICE_SDK_JAVA_AMQPSENDHANDLER_12_001: [The constructor shall throw IllegalArgumentException if any of the input parameter is null or empty]
         if (Tools.isNullOrEmpty(hostName))
         {
@@ -350,6 +355,7 @@ public class AmqpSendHandler extends BaseHandler
             isConnected = false;
         }
 
+        this.SendNotificationCallback.onSendFinished();
     }
 
     public void sendComplete() throws IotHubException, IOException
