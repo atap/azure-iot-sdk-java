@@ -273,7 +273,7 @@ public final class AmqpsDeviceTelemetry extends AmqpsDeviceOperations
                 System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX " + propertyKey);
                 if (propertyKey.equals(INPUT_NAME_PROPERTY_KEY))
                 {
-                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX FOUND INPUT NAME IN AMQP TELEMETRY MESSAgE");
+                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX FOUND INPUT NAME IN AMQP TELEMETRY MESSAGE: " + entry.getValue().toString());
                     // Codes_SRS_AMQPSDEVICETELEMETRY_34_052: [If the amqp message contains an application property of
                     // "x-opt-input-name", this function shall assign its value to the IotHub message's input name.]
                     message.setInputName(entry.getValue().toString());
