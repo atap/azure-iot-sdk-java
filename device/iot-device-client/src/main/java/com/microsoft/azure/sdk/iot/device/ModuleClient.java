@@ -489,6 +489,16 @@ public class ModuleClient extends InternalClient
         }
 
         //Codes_SRS_MODULECLIENT_34_012: [This function shall save the provided callback with context in config tied to the provided inputName.]
+
+        if (callback == null)
+        {
+            System.out.println("Removing message callback with input: " + inputName);
+        }
+        else
+        {
+            System.out.println("Setting message callback with input: " + inputName);
+        }
+
         this.config.setMessageCallback(inputName, callback, context);
         return this;
     }
