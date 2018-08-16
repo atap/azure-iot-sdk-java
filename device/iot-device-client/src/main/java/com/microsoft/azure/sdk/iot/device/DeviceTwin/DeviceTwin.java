@@ -85,6 +85,8 @@ public class DeviceTwin
                     System.out.println("############## Status is " + status + " ##############");
                 }
 
+                System.out.println("Handling twin message of type: " + dtMessage.getDeviceOperationType());
+
                 switch (dtMessage.getDeviceOperationType())
                 {
                     case DEVICE_OPERATION_TWIN_GET_RESPONSE:
@@ -135,10 +137,15 @@ public class DeviceTwin
                          **Codes_SRS_DEVICETWIN_25_026: [**If the message is of type DEVICE_TWIN and DEVICE_OPERATION_TWIN_SUBSCRIBE_DESIRED_PROPERTIES_RESPONSE then the payload is deserialized.**]**
                          */
                         isSubscribed = true;
-                        TwinState twinState = TwinState.createFromDesiredPropertyJson(new String(dtMessage.getBytes(), Message.DEFAULT_IOTHUB_MESSAGE_CHARSET));
+                        System.out.println("Creating twin state from desired property json:");
+                        String json = new String(dtMessage.getBytes(), Message.DEFAULT_IOTHUB_MESSAGE_CHARSET);
+                        System.out.println("Creating twin state from desired property json:");
+                        System.out.println(json);
+                        TwinState twinState = TwinState.createFromDesiredPropertyJson(json);
 
                         if(twinState.getDesiredProperty() != null)
                         {
+                            System.out.println("Notifying onDesiredPropertyChanged...");
                             OnDesiredPropertyChanged(twinState.getDesiredProperty());
                         }
 
