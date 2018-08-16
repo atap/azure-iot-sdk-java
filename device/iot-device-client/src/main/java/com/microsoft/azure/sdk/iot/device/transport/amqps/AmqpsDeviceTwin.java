@@ -293,7 +293,10 @@ public final class AmqpsDeviceTwin extends AmqpsDeviceOperations
                 // Codes_SRS_AMQPSDEVICETWIN_12_023: [The function shall find the proton correlation ID in the correlationIdList and if it is found, set the operation type to the related response.]
                 if (correlationIdList.containsKey(properties.getCorrelationId().toString()))
                 {
+                    System.out.println("Checking twin message device operation...");
                     DeviceOperations deviceOperations = correlationIdList.get(properties.getCorrelationId().toString());
+                    System.out.println("DeviceOperations: " + deviceOperations);
+                    System.out.println("correlationid: " + properties.getCorrelationId());
                     switch (deviceOperations)
                     {
                         case DEVICE_OPERATION_TWIN_GET_REQUEST:
@@ -395,6 +398,7 @@ public final class AmqpsDeviceTwin extends AmqpsDeviceOperations
         {
             properties.setCorrelationId(UUID.fromString(deviceTwinMessage.getCorrelationId()));
             // Codes_SRS_AMQPSDEVICETWIN_12_045: [The function shall add the correlationId to the correlationIdList if it is not null.]
+            System.out.println("Putting device operation type in correlationid list: " + deviceTwinMessage.getDeviceOperationType() + " with corid: " + deviceTwinMessage.getCorrelationId());
             this.correlationIdList.put(deviceTwinMessage.getCorrelationId(), deviceTwinMessage.getDeviceOperationType());
         }
         outgoingMessage.setProperties(properties);
