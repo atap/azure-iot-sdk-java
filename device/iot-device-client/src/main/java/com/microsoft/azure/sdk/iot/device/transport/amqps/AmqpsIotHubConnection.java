@@ -960,6 +960,8 @@ public final class AmqpsIotHubConnection extends BaseHandler implements IotHubTr
         transportMessage.setMessageCallback(amqpsHandleMessageReturnValue.getMessageCallback());
         transportMessage.setMessageCallbackContext(amqpsHandleMessageReturnValue.getMessageContext());
 
+        System.out.println("(((((((((((((((((((RECEIVED MESSAGE FROM SERVICE WITH BODY: " + new String(transportMessage.getBytes()));
+
         this.sendAckMessages.put(transportMessage, amqpsMessage);
 
         //Codes_SRS_AMQPSIOTHUBCONNECTION_34_090: [If an amqp message can be received from the receiver link, and that amqp message contains a status code that is 200 or 204, this function shall notify this object's listeners that that message was received with a null exception.]
