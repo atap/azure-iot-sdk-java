@@ -345,6 +345,10 @@ public final class AmqpsDeviceTwin extends AmqpsDeviceOperations
                 message.setProperty(AMQPS_APP_PROPERTY_PREFIX + USER_ID_KEY, properties.getUserId().toString());
             }
         }
+        else
+        {
+            System.out.println("$$$$$$MISSING PROPERTIES!!!!!^%^#%$^#$%#");
+        }
 
         // Codes_SRS_AMQPSDEVICETWIN_12_026: [The function shall copy the Proton application properties to IotHubTransportMessage properties excluding the reserved property names.]
         System.out.println("^^^^^^^^Looking at application properties");
