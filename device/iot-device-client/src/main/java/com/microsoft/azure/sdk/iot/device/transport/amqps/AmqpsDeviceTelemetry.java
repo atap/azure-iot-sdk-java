@@ -151,7 +151,7 @@ public final class AmqpsDeviceTelemetry extends AmqpsDeviceOperations
             // Codes_SRS_AMQPSDEVICETELEMETRY_12_021: [The function shall set the MessageType to DEVICE_TELEMETRY if the super function returned not null.]
             amqpsMessage.setAmqpsMessageType(MessageType.DEVICE_TELEMETRY);
             amqpsMessage.setDeviceClientConfig(this.deviceClientConfig);
-            System.out.println("!@##$!$!$!!$!$!$!FOUND TWIN TELEMETRY");
+            System.out.println("!@##$!$!$!!$!$!$!FOUND TELEMETRY");
         }
 
 
