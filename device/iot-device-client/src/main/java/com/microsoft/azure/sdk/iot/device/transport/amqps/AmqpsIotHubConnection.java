@@ -962,6 +962,7 @@ public final class AmqpsIotHubConnection extends BaseHandler implements IotHubTr
 
         System.out.println("(((((((((((((((((((RECEIVED MESSAGE FROM SERVICE WITH BODY: " + new String(transportMessage.getBytes()));
 
+        System.out.println("$$$$$$$Waiting for transport to ack the amqp message...");
         this.sendAckMessages.put(transportMessage, amqpsMessage);
 
         //Codes_SRS_AMQPSIOTHUBCONNECTION_34_090: [If an amqp message can be received from the receiver link, and that amqp message contains a status code that is 200 or 204, this function shall notify this object's listeners that that message was received with a null exception.]
@@ -1032,6 +1033,9 @@ public final class AmqpsIotHubConnection extends BaseHandler implements IotHubTr
         {
             AmqpsMessage amqpsMessage = sendAckMessages.get(message);
 
+            System.out.println("$$$$$$$Transport acked the amqp message,  sending amqp ack...");
+
+
             switch (result)
             {
                 case ABANDON:
@@ -1055,6 +1059,7 @@ public final class AmqpsIotHubConnection extends BaseHandler implements IotHubTr
             }
 
             // Codes_SRS_AMQPSTRANSPORT_34_071: [If the amqp message is acknowledged, this function shall remove it from the saved map of messages to acknowledge and return true.]
+            System.out.println("$$$$$$$amqp ack!");
             this.sendAckMessages.remove(message);
             return true;
         }
