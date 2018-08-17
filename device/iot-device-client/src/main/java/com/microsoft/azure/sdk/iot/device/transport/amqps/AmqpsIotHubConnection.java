@@ -1033,7 +1033,7 @@ public final class AmqpsIotHubConnection extends BaseHandler implements IotHubTr
         {
             AmqpsMessage amqpsMessage = sendAckMessages.get(message);
 
-            System.out.println("$$$$$$$Transport acked the amqp message,  sending amqp ack...");
+            System.out.println("$$$$$$$Transport acked the amqp message,  sending amqp ack..." + result);
 
 
             switch (result)
