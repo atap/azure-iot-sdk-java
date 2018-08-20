@@ -132,6 +132,12 @@ public class Message
     private byte[] body;
 
     /**
+     * Message routing options
+     */
+    private String contentType;
+    private String contentEncoding;
+
+    /**
      * Stream that will provide the bytes for the body of the
      */
     private ByteArrayInputStream bodyStream;
@@ -534,4 +540,43 @@ public class Message
         this.iotHubConnectionString = iotHubConnectionString;
     }
 
+    /**
+     * Return the message's content type. This value is null by default
+     * @return the message's content type
+     */
+    public String getContentType()
+    {
+        // Codes_SRS_MESSAGE_34_059: [The function shall return the message's content type.]
+        return this.contentType;
+    }
+
+    /**
+     * Set the content type of this message. Used in message routing.
+     * @param contentType the content type of the message. May be null if you don't want to specify a content type.
+     */
+    public void setContentType(String contentType)
+    {
+        // Codes_SRS_MESSAGE_34_060: [The function shall save the provided content type.]
+        this.contentType = contentType;
+    }
+
+    /**
+     * Returns this message's content encoding. This value is null by default
+     * @return the message's content encoding.
+     */
+    public String getContentEncoding()
+    {
+        // Codes_SRS_MESSAGE_34_061: [The function shall return the message's content encoding.]
+        return this.contentEncoding;
+    }
+
+    /**
+     * Set the content encoding of this message. Used in message routing.
+     * @param contentEncoding the content encoding of the message. May be null if you don't want to specify a content encoding.
+     */
+    public void setContentEncoding(String contentEncoding)
+    {
+        // Codes_SRS_MESSAGE_34_062: [The function shall save the provided content encoding.]
+        this.contentEncoding = contentEncoding;
+    }
 }
