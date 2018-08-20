@@ -15,6 +15,9 @@ import mockit.*;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -510,7 +513,7 @@ public class MqttMessagingTest
     //Tests_SRS_MqttMessaging_34_032: [If the message has a content type, this method shall append that to publishTopic before publishing using the key name `$.ct`.]
     //Tests_SRS_MqttMessaging_34_032: [If the message has a content encoding, this method shall append that to publishTopic before publishing using the key name `$.ce`.]
     @Test
-    public void sendShallIncludeAllSystemPropertiesAndAllCustomPropertiesInPublishTopic(@Mocked final Mqtt mockMqtt) throws TransportException
+    public void sendShallIncludeAllSystemPropertiesAndAllCustomPropertiesInPublishTopic(@Mocked final Mqtt mockMqtt) throws TransportException, UnsupportedEncodingException
     {
         final byte[] messageBody = {0x61, 0x62, 0x63};
         final String propertyName1 = "key1";
@@ -522,8 +525,9 @@ public class MqttMessagingTest
         final String userId = "test-user-id";
         final String to = "test-to";
         final String outputName = "outputName";
-        final String contentType = "some-content-type";
-        final String contentEncoding = "some-content-encoding";
+        final String contentType = "application/json";
+        final String contentTypeEncoded = URLEncoder.encode(contentType, StandardCharsets.UTF_8.name());
+        final String contentEncoding = "utf-8";
         final MessageProperty[] messageProperties = new MessageProperty[]
                 {
                         new MessageProperty(propertyName1, propertyValue1),
@@ -555,7 +559,7 @@ public class MqttMessagingTest
 
         MqttMessaging testMqttMessaging = new MqttMessaging(mockedMqttConnection, CLIENT_ID, mockedIotHubListener, null, "", "", false);
         final String publishTopicWithAllSystemAndCustomProperties = String.format(
-                "devices/%s/messages/events/$.mid=%s&$.cid=%s&$.uid=%s&$.to=%s&$.on=%s&$.ce=%s&$.ct=%s&%s=%s&%s=%s", CLIENT_ID, messageId, correlationId, userId, to, outputName, contentEncoding, contentType, propertyName1, propertyValue1, propertyName2, propertyValue2);
+                "devices/%s/messages/events/$.mid=%s&$.cid=%s&$.uid=%s&$.to=%s&$.on=%s&$.ce=%s&$.ct=%s&%s=%s&%s=%s", CLIENT_ID, messageId, correlationId, userId, to, outputName, contentEncoding, contentTypeEncoded, propertyName1, propertyValue1, propertyName2, propertyValue2);
 
         // act
         testMqttMessaging.send(mockedMessage);
